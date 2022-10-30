@@ -16,20 +16,26 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-
     - run: npm install --legacy-peer-deps --no-audit --silent
     - run: npm run lint
     - run: npm run build
+    - name: build-dist-cache
+      with:
+        key: build-dist-cache
+        path: dist
 
   build-image:
     needs: ['build']
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: build-dist-cache
+      with:
+        key: build-dist-cache
+        path: dist
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
