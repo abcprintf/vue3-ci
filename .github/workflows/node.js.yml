@@ -57,13 +57,13 @@ jobs:
         key: ${{ runner.os }}-dist
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$NOW
+      run: docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME }}:${{ env.NOW }}
 
     - name: image cache
       id: image-cache
       uses: actions/cache@v3
       with:
-        path: $IMAGE_NAME:$NOW
+        path: ${{ env.IMAGE_NAME }}:${{ env.NOW }}
         key: ${{ runner.os }}-image
 
   push-image-docker:
@@ -82,5 +82,5 @@ jobs:
         id: image-cache
         uses: actions/cache@v3
         with:
-          path: $IMAGE_NAME:$NOW
+          path: ${{ env.IMAGE_NAME }}:${{ env.NOW }}
           key: ${{ runner.os }}-image
