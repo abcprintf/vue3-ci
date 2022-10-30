@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  IMAGE_NAME: vue3-ci
+  NOW: $GITHUB_RUN_ID
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,14 +40,12 @@ jobs:
   build-image:
     needs: ['build']
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: vue3-ci
     steps:
 
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
-    - name: Echo current date
-      run: echo $NOW
+    # - name: Set current date as env variable
+    #   run: echo "NOW=$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
+    # - name: Echo current date
+    #   run: echo $NOW
 
     - uses: actions/checkout@v3
 
@@ -75,3 +77,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: image cache
+        id: image-cache
+        uses: actions/cache@v3
+        with:
+          path: $IMAGE_NAME:$NOW
+          key: ${{ runner.os }}-image
