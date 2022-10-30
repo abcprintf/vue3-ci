@@ -47,11 +47,10 @@ jobs:
         path: dist
         key: ${{ runner.os }}-dist
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$DATE_TIME
-
+      run: docker build . --file Dockerfile --tag "$IMAGE_NAME:$DATE_TIME"
     - name: image cache
       id: image-cache
       uses: actions/cache@v3
       with:
-        path: $IMAGE_NAME:$DATE_TIME
+        path: "$IMAGE_NAME:$DATE_TIME"
         key: ${{ runner.os }}-image
