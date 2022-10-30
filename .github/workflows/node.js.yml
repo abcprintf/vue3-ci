@@ -81,6 +81,13 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+      - name: build dist cache
+        id: build-dist-cache
+        uses: actions/cache@v3
+        with:
+          path: dist
+          key: ${{ runner.os }}-dist
+
       - name: image cache
         id: image-cache
         uses: actions/cache@v3
