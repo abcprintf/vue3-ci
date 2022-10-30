@@ -37,8 +37,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: vue3-ci
-      JOB_ID: ${{ GITHUB_JOB }}
     steps:
+
+    - name: Set current date as env variable
+      run: echo "NOW::$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+    - name: Echo current date
+      run: echo $NOW
+
     - uses: actions/checkout@v3
     - name: build dist cache
       id: build-dist-cache
@@ -47,10 +52,10 @@ jobs:
         path: dist
         key: ${{ runner.os }}-dist
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$JOB_ID
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$NOW
     - name: image cache
       id: image-cache
       uses: actions/cache@v3
       with:
-        path: $IMAGE_NAME:$JOB_ID
+        path: $IMAGE_NAME:$NOW
         key: ${{ runner.os }}-image
