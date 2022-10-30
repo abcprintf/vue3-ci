@@ -25,3 +25,11 @@ jobs:
     - run: npm install --legacy-peer-deps --no-audit --silent
     - run: npm run lint
     - run: npm run build
+
+  build-image:
+    needs: ['build']
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
