@@ -84,3 +84,12 @@ jobs:
         with:
           path: ${{ env.IMAGE_NAME }}:${{ env.NOW }}
           key: ${{ runner.os }}-image
+
+      - name: Build and push to Docker Hub
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: abcprintf/vue3-ci:latest, abcprintf/vue3-ci:${{ github.run_number }}
+          cache-from: type=local,src=${{ env.IMAGE_NAME }}:${{ env.NOW }}
+          cache-to: type=local,dest=${{ env.IMAGE_NAME }}:${{ env.NOW }}-image,mode=max
