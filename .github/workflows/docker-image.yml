@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Wait for build to succeed
+      uses: actions/checkout@v3
+      with:
+          ref: ${{ github.ref }}
+          check-name: 'Run build'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          allowed-conclusions: success,skipped,cancelled
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
