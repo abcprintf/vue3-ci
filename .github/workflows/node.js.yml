@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: vue3-ci
-      DATE_TIME: $(date +%s)
+      DATE_TIME: ${{ date + %s }}
     steps:
     - uses: actions/checkout@v3
     - name: build dist cache
@@ -47,10 +47,10 @@ jobs:
         path: dist
         key: ${{ runner.os }}-dist
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag "$IMAGE_NAME:$DATE_TIME"
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$DATE_TIME
     - name: image cache
       id: image-cache
       uses: actions/cache@v3
       with:
-        path: "$IMAGE_NAME:$DATE_TIME"
+        path: $IMAGE_NAME:$DATE_TIME
         key: ${{ runner.os }}-image
