@@ -1,10 +1,49 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useTemplateStore } from "./stores/template";
+import { useUserLoginStore } from "./stores/auth";
+import { RouterLink, RouterView, useRouter } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
+
+const isAuthened = ref(false);
+const message = ref("");
+
+const router = useRouter();
+
+const templateStore = useTemplateStore();
+const userStore = useUserLoginStore();
+const { getStyle } = storeToRefs(templateStore);
+const { getUser } = storeToRefs(userStore);
+
+const verifyAuth = () => {
+  if (typeof getUser.value.id === "undefined") {
+    router.push({ path: "/login" });
+    return;
+  }
+
+  isAuthened.value = getStyle.value.isAuthen;
+};
+
+onMounted(() => {
+  verifyAuth();
+});
+
+templateStore.$subscribe((mutation, state) => {
+  // console.log(mutation);
+  // console.log(state);
+  isAuthened.value = state.style.isAuthen;
+  // console.log(mutation.events.key);
+  // if (mutation.events.key === "isAuthen" && mutation.events.newValue) {
+  //   isAuthened.value = mutation.events.newValue;
+  // }
+
+  message.value = getUser.value.name;
+});
 </script>
 
 <template>
-  <header>
+  <header v-if="isAuthened">
     <img
       alt="Vue logo"
       class="logo"
@@ -12,10 +51,8 @@ import HelloWorld from "./components/HelloWorld.vue";
       width="125"
       height="125"
     />
-
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
+      <HelloWorld :msg="`Hello : ${message}`" />
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
