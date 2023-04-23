@@ -54,7 +54,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <h1>Login Page</h1>
+    <h1>Login Page test trigger</h1>
     <form @submit="checkForm">
       <div class="form-group">
         <label>Username :</label>
